@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
@@ -23,10 +24,12 @@ func main() {
 	router.HandleFunc("/contact/{id}", CreatePerson).Methods("POST")
 	router.HandleFunc("/contact/{id}", DeletePerson).Methods("DELETE")
 
-	log.Fatal(http.ListenAndServe(":8000", router))
+	log.Fatal(http.ListenAndServe(":8080", router))
 }
 
-func GetPeople(w http.ResponseWriter, r *http.Request)    {}
+func GetPeople(w http.ResponseWriter, r *http.Request) {
+	json.NewEncoder(w).Encode(people)
+}
 func GetPerson(w http.ResponseWriter, r *http.Request)    {}
 func CreatePerson(w http.ResponseWriter, r *http.Request) {}
 func DeletePerson(w http.ResponseWriter, r *http.Request) {}
