@@ -13,31 +13,38 @@ func main() {
 
 	// Populate the fake database ->
 	people = append(people, Person{ID: "1", Firstname: "Carlos", Lastname: "Silva", Address: &Address{City: "City X", State: "State X"}})
-	people = append(people, Person{ID: "2", Firstname: "Luiz", Lastname: "Roberto", Address: &Address{City: "City Z", State: "State Y"}})
-	people = append(people, Person{ID: "3", Firstname: "Andre", Lastname: "Santos"})
+	people = append(people, Person{ID: "2", Firstname: "Luiz", Lastname: "Vinicius", Address: &Address{City: "City Z", State: "State Y"}})
+	people = append(people, Person{ID: "3", Firstname: "Vinicius", Lastname: "Alberto", Address: &Address{City: "City Z", State: "State Y"}})
+	people = append(people, Person{ID: "4", Firstname: "Ana", Lastname: "Luiza", Address: &Address{City: "City Z", State: "State Y"}})
+	people = append(people, Person{ID: "5", Firstname: "Barbara", Lastname: "Santos", Address: &Address{City: "City Z", State: "State Y"}})
+	people = append(people, Person{ID: "6", Firstname: "Eduarda", Lastname: "Silva", Address: &Address{City: "City Z", State: "State Y"}})
+	people = append(people, Person{ID: "7", Firstname: "Andre", Lastname: "Santos"})
 	// <- Fake DB
 
 	router := mux.NewRouter()
 
 	router.HandleFunc("/contact", GetPeople).Methods("GET")
 	router.HandleFunc("/contact/{id}", GetPerson).Methods("GET")
-	router.HandleFunc("/contact/{id}", CreatePerson).Methods("POST")
+	router.HandleFunc("/contact/", CreatePerson).Methods("POST")
+	router.HandleFunc("/contact/{id}", UpdatePerson).Methods("POST")
 	router.HandleFunc("/contact/{id}", DeletePerson).Methods("DELETE")
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
 
 func GetPeople(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(people)
 }
 func GetPerson(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	for _, item := range people {
 		if item.ID == params["id"] {
 			json.NewEncoder(w).Encode(item)
 			return
 		}
-		json.NewEncoder(w).Encode(&Person{})
+		//json.NewEncoder(w).Encode(&Person{})
 	}
 }
 func CreatePerson(w http.ResponseWriter, r *http.Request) {
@@ -47,6 +54,9 @@ func CreatePerson(w http.ResponseWriter, r *http.Request) {
 	person.ID = params["id"]
 	people = append(people, person)
 	json.NewEncoder(w).Encode(people)
+}
+func UpdatePerson(w http.ResponseWriter, r *http.Request) {
+	// To be implemented
 }
 func DeletePerson(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
@@ -71,3 +81,5 @@ type Address struct {
 }
 
 var people []Person
+
+/// my file contains 73 lines before adapting the last part (u from CRuD) and also pretty
