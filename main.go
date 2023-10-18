@@ -30,9 +30,22 @@ func main() {
 func GetPeople(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(people)
 }
-func GetPerson(w http.ResponseWriter, r *http.Request)    {}
-func CreatePerson(w http.ResponseWriter, r *http.Request) {}
-func DeletePerson(w http.ResponseWriter, r *http.Request) {}
+func GetPerson(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	for _, item := range people {
+		if item.ID == params["id"] {
+			json.NewEncoder(w).Encode(item)
+			return
+		}
+		json.NewEncoder(w).Encode(&Person{})
+	}
+}
+func CreatePerson(w http.ResponseWriter, r *http.Request) {
+
+}
+func DeletePerson(w http.ResponseWriter, r *http.Request) {
+
+}
 
 type Person struct {
 	ID        string   `json:"id,omitempty"`
