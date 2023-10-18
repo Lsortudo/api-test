@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 )
@@ -44,16 +45,16 @@ func GetPerson(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(item)
 			return
 		}
-		//json.NewEncoder(w).Encode(&Person{})
+		//json.NewEncoder(w).Encode(&Person{})      Gerando um campo vazio pra cada iteracao falsa do forIf
 	}
 }
 func CreatePerson(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	var person Person
-	_ = json.NewDecoder(r.Body).Decode(&person)
-	person.ID = params["id"]
-	people = append(people, person)
-	json.NewEncoder(w).Encode(people)
+	w.Header().Set("Content-Type", "application/json")
+	var newPerson Person
+	json.NewDecoder(r.Body).Decode(&newPerson)
+	newPerson.ID = strconv.Itoa(len(people) + 1)
+	people = append(people, newPerson)
+	json.NewEncoder(w).Encode(newPerson)
 }
 func UpdatePerson(w http.ResponseWriter, r *http.Request) {
 	// To be implemented
