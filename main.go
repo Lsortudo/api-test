@@ -57,17 +57,30 @@ func CreatePerson(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(newPerson)
 }
 func UpdatePerson(w http.ResponseWriter, r *http.Request) {
-	// To be implemented
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+	for index, item := range people {
+		if item.ID == params["id"] {
+			people = append(people[:index], people[index+1:]...)
+			var newPerson Person
+			json.NewDecoder(r.Body).Decode(&newPerson)
+			newPerson.ID = params["id"]
+			people = append(people, newPerson)
+			json.NewEncoder(w).Encode(newPerson)
+			return
+		}
+	}
 }
 func DeletePerson(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	for index, item := range people {
 		if item.ID == params["id"] {
 			people = append(people[:index], people[index+1:]...)
 			break
 		}
-		json.NewEncoder(w).Encode(people)
 	}
+	json.NewEncoder(w).Encode(people)
 }
 
 type Person struct {
